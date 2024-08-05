@@ -52,4 +52,42 @@ contract Manager{
         return true;
     }
 
+    function updatePassword(string memory _resource, string memory _updatedPassword) external  onlyOwner returns (bool success) {
+        require(bytes(_updatedPassword).length > 0, "Password cannot be empty");
+
+        StorePassword[] memory passwords = StoreAllPasswords[msg.sender];
+
+        for (uint256 i = 0; i < passwords.length; i++) {
+            if (keccak256(bytes(passwords[i].resource)) == keccak256(bytes(_resource))) {
+                passwords[i].password = bytes32ToString(keccak256(abi.encodePacked(_updatedPassword)));
+                emit PasswordAction("Password updated!");
+                        return true;
+            }
+        }
+        revert("Password not found for the given resource");
+        // StoreAllPasswords[msg.sender].password = _password;
+    }
+
+
+    function deletePassword(string memory _password) external onlyOwner returns (bool success) {
+        StorePassword[] storage passwords = StoreAllPasswords[msg.sender];
+        bool passwordFound = false;
+
+
+        for(uint i = 0; i < passwords.length; i++) {
+            if(keccak256(abi.encodePacked(passwords[i].password)) == keccak256(abi.encodePacked(_password))) {
+                for (uint256 j = i; j < passwords.length -1; j++) {
+                    passwords[j] = passwords[j + 1];
+                }
+                // changed passwords modifications from memory to storage to allowing popping
+                passwords.pop();    
+                passwordFound = true;
+                break  ;  
+                // delete StoreAllPasswords[i];
+            }
+        }
+        emit PasswordAction("Password deleted!");
+        return true;
+    }
+
 }
