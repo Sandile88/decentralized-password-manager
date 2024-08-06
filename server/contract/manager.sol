@@ -90,4 +90,23 @@ contract Manager{
         return true;
     }
 
+
+
+    function getPassword(string memory _resource) external view onlyOwner returns (string memory, string memory resource){
+        require(StoreAllPasswords[msg.sender].length > 0, "No passwords stored yet!");
+
+        StorePassword[] memory  passwords = StoreAllPasswords[msg.sender];
+        for (uint256 i = 0; i < passwords.length; i++) {
+            if (keccak256(bytes(passwords[i].resource)) == keccak256(bytes(_resource)))
+                return (passwords[i].password, passwords[i].resource);
+        }
+        revert("Password not found for give  resource");
+    }
+
+       
+    function getAllPasswords() external view onlyOwner returns  (StorePassword[] memory){
+        return StoreAllPasswords[msg.sender];
+    }
+
+
 }
