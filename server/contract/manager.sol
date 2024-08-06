@@ -109,4 +109,23 @@ contract Manager{
     }
 
 
+    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
+        uint8 i = 0;
+        while(i < 32 && _bytes32[i] != 0) {
+            i++;
+        }
+        bytes memory bytesArray = new bytes(i);
+        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
+    }
+
+
+    function hashedPassword(string calldata _text) internal pure returns(string memory) {
+        bytes32 b = keccak256(abi.encodePacked(bytes(_text)));
+        return bytes32ToString(b);
+    }
+
+
 }
