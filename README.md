@@ -7,3 +7,10 @@
 
 ## Front-end
 - Creation of a friendly user interface using the Nextjs framework with Tailwindcss and Typescript
+
+
+### Requirements:
+**Note**: README will be refined!
+
+- npm install node
+- npm install -g node-rsa
