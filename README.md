@@ -13,4 +13,4 @@
 **Note**: README will be refined!
 
 - npm install node
-- npm install -g node-rsa
+- npm install node-rsa
