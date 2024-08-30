@@ -13,8 +13,8 @@ let secret = "Non-readable secret"; //secret text to be encrypted
 
 //extract public and private key:
 
-// var public_key = key.exportKey('public');
-// var private_key = key.exportKey('private');
+var public_key = key.exportKey('public');
+var private_key = key.exportKey('private');
 
 // console.log(public_key + '\n' + private_key);
 

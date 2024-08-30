@@ -3,13 +3,15 @@ pragma solidity ^0.8.18;
 
 contract Manager{
    struct StorePassword {
-        string password;
-        string resource;
+        bytes32 password; //changed from string to bytes32
     }
 
     address public owner;
-    string private masterPassword;
-    mapping(address => StorePassword[]) private StoreAllPasswords;
+    bytes32 private masterPassword; //stored as bytes32
+
+    // passwords are stored in a mapping with the hashed resource as the key.
+    mapping(address => mapping(bytes32 => StorePassword)) private storeAllPasswords;
+    // mapping(address => StorePassword[]) private StoreAllPasswords;
 
     event PasswordAction(string message);
 
@@ -21,12 +23,12 @@ contract Manager{
 
     constructor(string memory _masterPassword) {
         owner = msg.sender;
-        masterPassword = _masterPassword;
+        masterPassword = keccak256(abi.encodePacked(_masterPassword));
     }
    
    
     function setMasterPassword(string calldata _masterPassword) external onlyOwner{
-        masterPassword = hashedPassword(_masterPassword);
+        masterPassword = keccak256(abi.encodePacked(_masterPassword));
 
          // add password and then encrypt on the frontend with crpyto-rsa
         // so add your code to encrypt from your frontend this side
@@ -39,14 +41,13 @@ contract Manager{
         require(bytes(_password).length > 0, "Password cannot be empty");
         require(bytes(_resource).length > 0, "Resource cannot be empty");
 
-        bytes32 hPassword = keccak256(abi.encodePacked(_password));
-        string memory h = bytes32ToString(hPassword);
+        bytes32 resourceHash = keccak256(abi.encodePacked(_resource));
+        bytes32 passwordHash = keccak256(abi.encodePacked(_password));
 
-        StoreAllPasswords[msg.sender].push(StorePassword({
-            password: h,
-            // password: _password,
-            resource: _resource
-        }));
+        storeAllPasswords[msg.sender][resourceHash] = StorePassword({
+    password: passwordHash  // Store directly as bytes32
+});
+
 
         emit PasswordAction("Password Added!");
         return true;
@@ -55,77 +56,33 @@ contract Manager{
     function updatePassword(string memory _resource, string memory _updatedPassword) external  onlyOwner returns (bool success) {
         require(bytes(_updatedPassword).length > 0, "Password cannot be empty");
 
-        StorePassword[] memory passwords = StoreAllPasswords[msg.sender];
+        bytes32 resourceHash = keccak256(abi.encodePacked(_resource));
+        require(storeAllPasswords[msg.sender][resourceHash].password != bytes32(0) , "Resource not found");
+        // StorePassword[] memory passwords = StoreAllPasswords[msg.sender];
 
-        for (uint256 i = 0; i < passwords.length; i++) {
-            if (keccak256(bytes(passwords[i].resource)) == keccak256(bytes(_resource))) {
-                passwords[i].password = bytes32ToString(keccak256(abi.encodePacked(_updatedPassword)));
-                emit PasswordAction("Password updated!");
-                        return true;
-            }
-        }
-        revert("Password not found for the given resource");
-        // StoreAllPasswords[msg.sender].password = _password;
+        storeAllPasswords[msg.sender][resourceHash].password = keccak256(abi.encodePacked(_updatedPassword));
+        emit PasswordAction("Password updated!");
+        return true;
+
     }
 
 
-    function deletePassword(string memory _password) external onlyOwner returns (bool success) {
-        StorePassword[] storage passwords = StoreAllPasswords[msg.sender];
-        bool passwordFound = false;
+    function deletePassword(string memory _resource) external onlyOwner returns (bool success) {
+        bytes32 resourceHash = keccak256(abi.encodePacked(_resource));
+        require(storeAllPasswords[msg.sender][resourceHash].password != bytes32(0), "Resource not found");
 
-
-        for(uint i = 0; i < passwords.length; i++) {
-            if(keccak256(abi.encodePacked(passwords[i].password)) == keccak256(abi.encodePacked(_password))) {
-                for (uint256 j = i; j < passwords.length -1; j++) {
-                    passwords[j] = passwords[j + 1];
-                }
-                // changed passwords modifications from memory to storage to allowing popping
-                passwords.pop();    
-                passwordFound = true;
-                break  ;  
-                // delete StoreAllPasswords[i];
-            }
-        }
+        delete storeAllPasswords[msg.sender][resourceHash];
         emit PasswordAction("Password deleted!");
         return true;
     }
 
 
 
-    function getPassword(string memory _resource) external view onlyOwner returns (string memory, string memory resource){
-        require(StoreAllPasswords[msg.sender].length > 0, "No passwords stored yet!");
+    function getPassword(string memory _resource) external view onlyOwner returns (bytes32 password){
+        bytes32 resourceHash = keccak256(abi.encodePacked(_resource));
+        require(storeAllPasswords[msg.sender][resourceHash].password != bytes32(0), "Resource not found");
 
-        StorePassword[] memory  passwords = StoreAllPasswords[msg.sender];
-        for (uint256 i = 0; i < passwords.length; i++) {
-            if (keccak256(bytes(passwords[i].resource)) == keccak256(bytes(_resource)))
-                return (passwords[i].password, passwords[i].resource);
-        }
-        revert("Password not found for give  resource");
+
+        return storeAllPasswords[msg.sender][resourceHash].password;
     }
-
-       
-    function getAllPasswords() external view onlyOwner returns  (StorePassword[] memory){
-        return StoreAllPasswords[msg.sender];
-    }
-
-
-    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
-        uint8 i = 0;
-        while(i < 32 && _bytes32[i] != 0) {
-            i++;
-        }
-        bytes memory bytesArray = new bytes(i);
-        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
-            bytesArray[i] = _bytes32[i];
-        }
-        return string(bytesArray);
-    }
-
-
-    function hashedPassword(string calldata _text) internal pure returns(string memory) {
-        bytes32 b = keccak256(abi.encodePacked(bytes(_text)));
-        return bytes32ToString(b);
-    }
-
-
 }
