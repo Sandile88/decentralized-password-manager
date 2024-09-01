@@ -1,0 +1,138 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_masterPassword",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "message",
+				"type": "string"
+			}
+		],
+		"name": "PasswordAction",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_resource",
+				"type": "string"
+			}
+		],
+		"name": "addPassword",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_resource",
+				"type": "string"
+			}
+		],
+		"name": "deletePassword",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_resource",
+				"type": "string"
+			}
+		],
+		"name": "getPassword",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "password",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_masterPassword",
+				"type": "string"
+			}
+		],
+		"name": "setMasterPassword",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_resource",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_updatedPassword",
+				"type": "string"
+			}
+		],
+		"name": "updatePassword",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]

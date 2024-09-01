@@ -33,7 +33,6 @@ contract Manager{
          // add password and then encrypt on the frontend with crpyto-rsa
         // so add your code to encrypt from your frontend this side
         //use web3 js to retrive public and private keys
-   
     }
 
 
@@ -45,25 +44,25 @@ contract Manager{
         bytes32 passwordHash = keccak256(abi.encodePacked(_password));
 
         storeAllPasswords[msg.sender][resourceHash] = StorePassword({
-    password: passwordHash  // Store directly as bytes32
-});
+            password: passwordHash  // Store directly as bytes32
+        });
 
 
         emit PasswordAction("Password Added!");
         return true;
     }
 
+
     function updatePassword(string memory _resource, string memory _updatedPassword) external  onlyOwner returns (bool success) {
         require(bytes(_updatedPassword).length > 0, "Password cannot be empty");
 
         bytes32 resourceHash = keccak256(abi.encodePacked(_resource));
         require(storeAllPasswords[msg.sender][resourceHash].password != bytes32(0) , "Resource not found");
-        // StorePassword[] memory passwords = StoreAllPasswords[msg.sender];
 
         storeAllPasswords[msg.sender][resourceHash].password = keccak256(abi.encodePacked(_updatedPassword));
+
         emit PasswordAction("Password updated!");
         return true;
-
     }
 
 
@@ -72,10 +71,10 @@ contract Manager{
         require(storeAllPasswords[msg.sender][resourceHash].password != bytes32(0), "Resource not found");
 
         delete storeAllPasswords[msg.sender][resourceHash];
+    
         emit PasswordAction("Password deleted!");
         return true;
     }
-
 
 
     function getPassword(string memory _resource) external view onlyOwner returns (bytes32 password){
@@ -85,4 +84,9 @@ contract Manager{
 
         return storeAllPasswords[msg.sender][resourceHash].password;
     }
+       
+
+    // function getAllPasswords() external view onlyOwner returns  (StorePassword[] memory){
+    //     return StoreAllPasswords[msg.sender];
+    // }
 }
