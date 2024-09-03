@@ -1,17 +1,23 @@
 "use client"
 import React, { useState } from "react";
 import Image from "next/image";
-import logo from "../../public/logo.svg";
-import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
+import logo from "../public/logo.svg";
+import  Wallet  from "../components/Wallet";
+// import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 
 
 const Navbar = () => {
 
     const [isClick, setisClick] = useState(false);
+    const { connect }  = Wallet();
 
     const dropDown = () => {
         setisClick(!isClick);
     };
+
+    const connectWallet = () => {
+      connect();
+    }
 
 
 
@@ -25,6 +31,7 @@ const Navbar = () => {
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button 
             type="button" 
+            onClick={connectWallet}
             className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ">
                 Connect Wallet
                 </button>

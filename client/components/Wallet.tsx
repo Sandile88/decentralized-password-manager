@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import abi from '../../../server/contract/vault.json'; // Import the JSON file of manager contract
+import abi from '../../server/contract/vault.json'; // Import the JSON file of manager contract
 import Web3 from 'web3';
 
 
@@ -13,13 +13,13 @@ const contractInstance = (web3: Web3) => {
 } 
 
 
-function App() {
+function Wallet() {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [accounts, setAccounts] = useState<Array<String>>([]);
   const [contract, setContract] = useState<any>(null);
 
 
-  const connectWallet = async () => {
+  const connect = async () => {
     if (window.ethereum) {
       try {
         const web3Instance = new Web3(window.ethereum);
@@ -37,24 +37,26 @@ function App() {
   };
   
 
-    return (
-        <div>
-            <h1>Password Manager App</h1>
-            {web3 ? (
-                <div>
-                    <p>Connected: {accounts[0]}</p>
+  return { connect, web3, accounts, contract }
+    // return (
+      
+    //     <div>
+    //         <h1>Password Manager App</h1>
+    //         {web3 ? (
+    //             <div>
+    //                 <p>Connected: {accounts[0]}</p>
                     
-                </div>
-            ) : (
-                <button onClick={connectWallet}> Connect Wallet</button>
+    //             </div>
+    //         ) : (
+    //             <button onClick={connect}> Connect Wallet</button>
             
-            )}
-        </div>
-    )
+    //         )}
+    //     </div>
+    // )
 
 }
 
-export default App;
+export default Wallet;
 
 
 
