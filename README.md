@@ -12,7 +12,6 @@
 ### Requirements:
 **Note**: README will be refined!
 
-- npm install node
-- npm install node-rsa
-- npm install web3
-- npm install react
+- npm i node
+- npm i node-rsa
+
