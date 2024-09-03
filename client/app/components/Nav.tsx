@@ -33,7 +33,7 @@ const Navbar = () => {
             onClick={dropDown}
             data-collapse-toggle="navbar-sticky"
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-100"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-sky-100"
             aria-controls="navbar-sticky"
             aria-expanded={isClick}
           >
