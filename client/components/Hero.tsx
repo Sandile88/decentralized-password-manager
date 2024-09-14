@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import shield from "../public/images/Image.png";
+import { FaLock } from "react-icons/fa";
 
 const Hero = () => {
     return (
@@ -14,7 +15,9 @@ const Hero = () => {
 
                     <a href="#" className="block max-w-sm p-6 rounded-lg shadow bg-gray-100 bg-gray-200">
 
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-black">Secure</h5>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-black">
+                        <FaLock/>
+                    Secure</h5>
                     <p className="font-normal text-gray-700 dark:text-gray-400">Keep your passwords safe with top-notch encryption.</p>
                     </a>
 

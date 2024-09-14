@@ -40,3 +40,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - npm i react
 - npm i react-scroll
 - npm i --save-dev @types/react-scroll
+- npm install react-icons --save
