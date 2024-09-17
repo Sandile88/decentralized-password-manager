@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import shield from "../public/images/Image.png";
-import { FaLock } from "react-icons/fa";
+import { RiShieldKeyholeFill } from "react-icons/ri";
+import { FaDatabase } from "react-icons/fa";
+import { BiHash } from "react-icons/bi";
+
+
 
 const Hero = () => {
     return (
@@ -16,21 +20,26 @@ const Hero = () => {
                     <a href="#" className="block max-w-sm p-6 rounded-lg shadow bg-gray-100 bg-gray-200">
 
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-black">
-                        <FaLock/>
-                    Secure</h5>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">Keep your passwords safe with top-notch encryption.</p>
+                    <RiShieldKeyholeFill className="mx-auto mb-2 text-3xl text-blue-600"/>
+                    Encrypt</h5>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">Utilize advanced encryption to safeguard your passwords, ensuring that only you have access to the stored data.</p>
                     </a>
 
                     <a href="#" className="block max-w-sm p-6 rounded-lg shadow bg-gray-100 bg-gray-200">
 
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">Sync</h5>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                    <FaDatabase className="mx-auto mb-2 text-3xl text-blue-600"/>
+    
+                        Store</h5>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">Efficiently manage your passwords and resources with secure on-chain storage, protected by decentralized technology.</p>
                     </a>
 
                     <a href="#" className="block max-w-sm p-6 rounded-lg shadow bg-gray-100 bg-gray-200">
 
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">Protect</h5>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                    <BiHash className="mx-auto mb-2 text-3xl text-blue-600"/>
+                    Hash</h5>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">Store your passwords as secure hashes, adding an extra layer of protection for all your sensitive information.</p>
                     </a>
                     </div>
 
