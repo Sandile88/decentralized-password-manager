@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import shield from "../public/images/Image.png";
 import { RiShieldKeyholeFill } from "react-icons/ri";
@@ -10,7 +10,7 @@ import { BiHash } from "react-icons/bi";
 
 const Hero = () => {
     return (
-        <div className="mt-40 flex items-center justify-center" >
+        <div id="hero" className="mt-40 flex items-center justify-center" >
             <div  className="text-center">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-black md:text-5xl lg:text-6xl">Welcome to VaultLock</h1>
                 <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Your secure and reliable decentralized password manager.</p>
