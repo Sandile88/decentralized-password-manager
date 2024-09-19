@@ -2,25 +2,45 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../public/logo.svg";
-import  Wallet  from "../components/Wallet";
+import  Wallet, { contractInstance }  from "../components/Wallet";
 // import { Link } from "react-scroll";
 import Link from "next/link";
+import Web3 from "web3";
+import Home from "../components/Home";
 // import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
-
 
 const Navbar = () => {
 
     const [isClick, setisClick] = useState(false);
-    const { connect }  = Wallet();
+    const [web3, setWeb3] = useState<Web3 | null>(null);
+    const [accounts, setAccounts] = useState<Array<String>>([]);
+    const [contract, setContract] = useState<any>(null);
 
     const dropDown = () => {
         setisClick(!isClick);
     };
 
-    const connectWallet = () => {
-      connect();
-    }
 
+  
+  
+    const connect = async () => {
+      if (window.ethereum) {
+        try {
+          const web3Instance = new Web3(window.ethereum);
+          setWeb3(web3Instance);
+          const accounts = await web3Instance.eth.requestAccounts();
+          setAccounts(accounts);
+          const managerContract = contractInstance(web3Instance); // Pass web3Instance instead of web3
+          setContract(managerContract);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        console.error('Web3 not found');
+      }
+    };
+
+    
 
     return (
         <nav id="nav" className="bg-blue-600  fixed w-full z-20 top-0 start-0 border-b border-blue-200">
@@ -29,40 +49,45 @@ const Navbar = () => {
             <Image src={logo} className="h-8" alt="VaultLock Logo"/>
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VaultLock</span>
         </Link>
-        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <button 
-            type="button" 
-            onClick={connectWallet}
-            className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ">
-                Connect Wallet
-                </button>
-            
-                <button
-            onClick={dropDown}
-            data-collapse-toggle="navbar-sticky"
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-sky-100"
-            aria-controls="navbar-sticky"
-            aria-expanded={isClick}
+        {(accounts.length > 0) ? (
+          <Home/>
+        ) : (
+          <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <button 
+          type="button" 
+          onClick={connect}
+          className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ">
+              Connect Wallet
+              </button>
+          
+          <button
+          onClick={dropDown}
+          data-collapse-toggle="navbar-sticky"
+          type="button"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-sky-100"
+          aria-controls="navbar-sticky"
+          aria-expanded={isClick}
+        >
+          <span className="sr-only">Open main menu</span>
+          <svg
+            className="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 17 14"
           >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button>
-        </div>
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M1 1h15M1 7h15M1 13h15"
+            />
+          </svg>
+        </button>
+      </div>
+      
+        )}
         
         <div 
           className={`${
@@ -87,7 +112,6 @@ const Navbar = () => {
         </div>
         </div>
         </nav>
-
     );
 
 };
