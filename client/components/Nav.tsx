@@ -2,11 +2,14 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../public/logo.svg";
-import  Wallet, { contractInstance }  from "../components/Wallet";
+import { contractInstance }  from "../components/Wallet";
 // import { Link } from "react-scroll";
 import Link from "next/link";
 import Web3 from "web3";
-import Home from "../components/Home";
+import homee from "../app/home/page";
+// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 // import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 
 const Navbar = () => {
@@ -15,6 +18,8 @@ const Navbar = () => {
     const [web3, setWeb3] = useState<Web3 | null>(null);
     const [accounts, setAccounts] = useState<Array<String>>([]);
     const [contract, setContract] = useState<any>(null);
+    const router = useRouter(); // Initialize the router
+
 
     const dropDown = () => {
         setisClick(!isClick);
@@ -30,6 +35,12 @@ const Navbar = () => {
           setWeb3(web3Instance);
           const accounts = await web3Instance.eth.requestAccounts();
           setAccounts(accounts);
+          if (accounts.length > 0) {
+            // automatically switch to a new page
+                      router.push("/home");
+
+          }
+
           const managerContract = contractInstance(web3Instance); // Pass web3Instance instead of web3
           setContract(managerContract);
         } catch (error) {
@@ -49,9 +60,12 @@ const Navbar = () => {
             <Image src={logo} className="h-8" alt="VaultLock Logo"/>
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VaultLock</span>
         </Link>
-        {(accounts.length > 0) ? (
-          <Home/>
-        ) : (
+        {/* {(accounts.length > 0) ? (
+          <Link href="./Home" className="mt-40">
+            
+            <homee/>
+          </Link>
+        ) : ( */}
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button 
           type="button" 
@@ -87,7 +101,7 @@ const Navbar = () => {
         </button>
       </div>
       
-        )}
+        {/* )} */}
         
         <div 
           className={`${
