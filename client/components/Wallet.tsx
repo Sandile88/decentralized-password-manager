@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import abi from '../../server/contract/vault.json'; // Import the JSON file of manager contract
 import Web3 from 'web3';
+import { useRouter } from "next/navigation";
+
 
 
 export function contractInstance(web3: Web3)  {
@@ -13,32 +15,46 @@ export function contractInstance(web3: Web3)  {
 } 
 
 
-// function Wallet() {
-//   const [web3, setWeb3] = useState<Web3 | null>(null);
-//   const [accounts, setAccounts] = useState<Array<String>>([]);
-//   const [contract, setContract] = useState<any>(null);
+function Wallet() {
+  const [web3, setWeb3] = useState<Web3 | null>(null);
+  const [accounts, setAccounts] = useState<Array<String>>([]);
+  const [contract, setContract] = useState<any>(null);
+
+  const router = useRouter(); // Initialize the router
 
 
-//   const connect = async () => {
-//     if (window.ethereum) {
-//       try {
-//         const web3Instance = new Web3(window.ethereum);
-//         setWeb3(web3Instance);
-//         const accounts = await web3Instance.eth.requestAccounts();
-//         setAccounts(accounts);
-//         const managerContract = contractInstance(web3Instance); // Pass web3Instance instead of web3
-//         setContract(managerContract);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     } else {
-//       console.error('Web3 not found');
-//     }
-//   };
+
+  const connect = async () => {
+    if (window.ethereum) {
+      try {
+        const web3Instance = new Web3(window.ethereum);
+        setWeb3(web3Instance);
+        const accounts = await web3Instance.eth.requestAccounts();
+        setAccounts(accounts);
+        if (accounts.length > 0) {
+            // automatically switch to a new page
+                      router.push("/home");
+
+        }
+
+        const managerContract = contractInstance(web3Instance); // Pass web3Instance instead of web3
+        setContract(managerContract);
+
+
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.error('Web3 not found');
+    }
+  };
   
   
 
-//   return { connect, web3, accounts, contract }
+  return { connect, web3, accounts, contract }
+}
+
+export default Wallet;
 
 
 //     // return (
@@ -59,7 +75,6 @@ export function contractInstance(web3: Web3)  {
 
 // }
 
-// export default Wallet;
 
 
 
