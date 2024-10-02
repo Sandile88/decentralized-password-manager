@@ -94,15 +94,15 @@ const Navbar = () => {
                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                    </svg>
                </div>
-               <input type="search" id="default-search" className="block w-full lg:w-96 p-4 ps-10 text-sm text-black rounded-lg shadow bg-gray-100" placeholder="Search Passwords, Urls..." required />
-               <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Search</button>
+               <input type="search" id="default-search" className="block w-full lg:w-96 p-4 ps-10 text-sm text-black rounded-full shadow bg-gray-100" placeholder="Search Passwords, Urls..." required />
+               <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2">Search</button>
            </div>
 
             ): (
           <button 
           type="button" 
           onClick={connectWallet}
-          className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ">
+          className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 text-center ">
               Connect Wallet
               </button>
           
