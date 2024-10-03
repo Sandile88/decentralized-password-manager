@@ -10,9 +10,7 @@ import homee from "../app/home/page";
 // import { useRouter } from "next/router";
 // import { useRouter } from "next/navigation";
 import  Wallet  from "../components/Wallet";
-
-
-// import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
+import { Link as ScrollLink} from "react-scroll";
 
 const Navbar = () => {
 
@@ -105,13 +103,7 @@ const Navbar = () => {
           className="text-black bg-white hover:bg-sky-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 text-center ">
               Connect Wallet
               </button>
-          
             )}
-      
-
-
-
-          
           <button
           onClick={dropDown}
           data-collapse-toggle="navbar-sticky"
@@ -148,18 +140,18 @@ const Navbar = () => {
           id="navbar-sticky"
         >
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-            <li>
-                <Link href="#" className="block py-2 px-3 text-white rounded hover:text-sky-100 md:bg-transparent md:text-white md:p-0 md:hover:text-sky-100" aria-current="page">Home</Link>
+            <li>  
+                <ScrollLink to="hero" smooth={true} duration={500} className="block py-2 px-3 text-white rounded hover:text-blue-100 md:bg-transparent md:text-white md:p-0 md:hover:text-blue-100 hover:underline" aria-current="page">Home</ScrollLink>
             </li>
             <li>
-                <Link href="#" className="block py-2 px-3 text-white rounded hover:text-sky-100 md:hover:bg-transparent md:hover:text-sky-100 md:p-0">About</Link>
+                <ScrollLink to="services" smooth={true} duration={500} className="block py-2 px-3 text-white rounded hover:text-blue-100 md:hover:bg-transparent md:hover:text-blue-100 md:p-0">Services</ScrollLink>
             </li>
             <li>
-                <Link href="#" className="block py-2 px-3 text-white rounded hover:text-sky-100 md:hover:bg-transparent md:hover:text-sky-100 md:p-0">Services</Link>
+                <ScrollLink to="how-to" smooth={true} duration={500} className="block py-2 px-3 text-white rounded hover:text-blue-100 md:hover:bg-transparent md:hover:text-blue-100 md:p-0">How To</ScrollLink>
             </li>
-            <li>
-                <Link href="#" className="block py-2 px-3 text-white rounded hover:text-sky-100 md:hover:bg-transparent md:hover:text-sky-100 md:p-0">Contact</Link>
-            </li>
+            {/* <li>
+                <Link className="block py-2 px-3 text-white rounded hover:text-sky-100 md:hover:bg-transparent md:hover:text-sky-100 md:p-0">Contact</Link>
+            </li> */}
             </ul>
         </div>
         </div>

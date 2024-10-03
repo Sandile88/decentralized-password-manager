@@ -3,6 +3,7 @@ import Hero from "../components/Hero";
 import Footer from "../components/Footer";
 import Services from "../components/Services";
 import HowTo from "../components/HowTo";
+import CTA from "../components/CTA";
 
 const LandingPage = () => {
   return (
@@ -10,7 +11,8 @@ const LandingPage = () => {
     <Hero/>
     <Services/>
     <HowTo/>
-      <Footer/>
+    <CTA/>
+    <Footer/>
     </>
   );
 };

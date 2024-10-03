@@ -52,7 +52,7 @@ const Services = () => {
                     </svg> */}
                     <div className="ml-5">
                         <h3 className="text-lg font-semibold text-black">Hashing Technology</h3>
-                        <p className="mt-4 text-base text-gray-600">aultLock stores your passwords as secure hashes, providing an additional layer of protection. Even if someone gains access to the stored data, they would only see hashed, meaningless information.</p>
+                        <p className="mt-4 text-base text-gray-600">VaultLock stores your passwords as secure hashes, providing an additional layer of protection. Even if someone gains access to the stored data, they would only see hashed, meaningless information.</p>
                     </div>
                 </div>
 
