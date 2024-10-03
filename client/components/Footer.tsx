@@ -3,6 +3,7 @@ import React from "react";
 
 const Footer = () => {
     return (
+        <section>
     <footer className="bg-gray-200 rounded-lg shadow m-4">
         <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span className="text-sm text-black sm:text-center">© 2024 <a href="https://flowbite.com/" className="hover:underline">VaultLock™</a>. All Rights Reserved.
@@ -23,6 +24,7 @@ const Footer = () => {
         </ul>
         </div>
     </footer>
+    </section>
 
     )
 }

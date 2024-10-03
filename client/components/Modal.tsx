@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({isOpen, onClose}) => {
                         <button type="button" className="end-2.5 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                                 onClick={onClose}
                         >
-                            <svg className="w-2 h-3 text-blue-600 hover:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <svg className="w-2 h-3 text-blue-600 hover:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                             </svg>
                             <span className="sr-only">Close modal</span>
@@ -30,15 +30,15 @@ const Modal: React.FC<ModalProps> = ({isOpen, onClose}) => {
                     <div className="p-4 md:p-5">
                         <form className="space-y-4" action="#">
                         <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-black">Website Name/URL</label>
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-600">Website Name/URL</label>
                                 <input type="email" name="email" id="email" className="bg-gray-200 border border-gray-300 text-white text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:placeholder-blue-400 " placeholder="name@company.com" required />
                             </div>
                             <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-black">Username</label>
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-600">Username</label>
                                 <input type="email" name="email" id="email" className="bg-gray-200 border border-gray-300 text-white text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-blue-400 " placeholder="pluto67#!" required />
                             </div>
                             <div>
-                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-black">Password</label>
+                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-600">Password</label>
                                 <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-200 border border-gray-300 text-white text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:placeholder-blue-400" required />
                             </div>
                             <div className="flex justify-between">
