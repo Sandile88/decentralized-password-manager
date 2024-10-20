@@ -1,28 +1,31 @@
-'use client'
-import { useState } from 'react';
-import abi from '../../server/contract/vault.json'; // Import the JSON file of manager contract
+"use client"
+import React, { createContext, useState, useContext } from 'react';
 import Web3 from 'web3';
-import { useRouter } from "next/navigation";
+import abi from '../../server/contract/vault.json'; // Import the JSON file of manager contract
+import { useRouter } from 'next/navigation';
 
+interface WalletContextType {
+  connect: () => Promise<void>;
+  web3: Web3 | null;
+  accounts: string[];
+  contract: any;
+}
 
+const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-export function contractInstance(web3: Web3)  {
-    return new web3.eth.Contract(
-        abi,
-        
-        "CONTRACT ID"
-    )
-} 
+export function contractInstance(web3: Web3) {
+  return new web3.eth.Contract(
+    abi as any,
+    "0x38cB7800C3Fddb8dda074C1c650A155154924C73"
+  );
+}
 
-
-function Wallet() {
+export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [accounts, setAccounts] = useState<Array<String>>([]);
+  const [accounts, setAccounts] = useState<string[]>([]);
   const [contract, setContract] = useState<any>(null);
 
-  const router = useRouter(); // Initialize the router
-
-
+  const router = useRouter();
 
   const connect = async () => {
     if (window.ethereum) {
@@ -32,15 +35,11 @@ function Wallet() {
         const accounts = await web3Instance.eth.requestAccounts();
         setAccounts(accounts);
         if (accounts.length > 0) {
-            // automatically switch to a new page
-                      router.push("/home");
-
+          router.push('/home');
         }
 
-        const managerContract = contractInstance(web3Instance); // Pass web3Instance instead of web3
+        const managerContract = contractInstance(web3Instance);
         setContract(managerContract);
-
-
       } catch (error) {
         console.error(error);
       }
@@ -48,34 +47,18 @@ function Wallet() {
       console.error('Web3 not found');
     }
   };
-  
-  
 
-  return { connect, web3, accounts, contract }
-}
+  return (
+    <WalletContext.Provider value={{ connect, web3, accounts, contract }}>
+      {children}
+    </WalletContext.Provider>
+  );
+};
 
-export default Wallet;
-
-
-//     // return (
-      
-//     //     <div>
-//     //         <h1>Password Manager App</h1>
-//     //         {web3 ? (
-//     //             <div>
-//     //                 <p>Connected: {accounts[0]}</p>
-                    
-//     //             </div>
-//     //         ) : (
-//     //             <button onClick={connect}> Connect Wallet</button>
-            
-//     //         )}
-//     //     </div>
-//     // )Wallet
-
-// }
-
-
-
-
-  
+export const useWallet = () => {
+  const context = useContext(WalletContext);
+  if (context === undefined) {
+    throw new Error('Wallet is undefined');
+  }
+  return context;
+};

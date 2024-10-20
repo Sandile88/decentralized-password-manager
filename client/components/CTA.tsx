@@ -1,11 +1,11 @@
 "use client"
 import React from "react";
-import  Wallet  from "../components/Wallet";
+import { useWallet } from "../components/Wallet";
 
 
 const CTA = () => {
 
-    const { connect }  = Wallet();
+    const { connect }  = useWallet();
 
     const connectWallet = () => {
         connect();
