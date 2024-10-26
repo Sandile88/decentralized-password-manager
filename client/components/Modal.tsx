@@ -8,6 +8,7 @@ interface ModalProps {
     onPasswordSaved: (passwordData: PasswordData) => void;
     editMode?: boolean;
     initialData?: PasswordData | null;
+    deleteMode?: boolean;
 }
 
 interface PasswordData {
@@ -21,7 +22,8 @@ const Modal: React.FC<ModalProps> = ({
     onClose, 
     onPasswordSaved, 
     editMode = false,
-    initialData = null 
+    initialData = null,
+    deleteMode = false
 }) => {
     const { accounts, contract } = useWallet();
     const [formData, setFormData] = useState<PasswordData>({
@@ -60,7 +62,10 @@ const Modal: React.FC<ModalProps> = ({
                     .updatePassword(formData.resource, formData.password)
                     .send({ from: accounts[0] });
                 console.log("Password updated: ", res);
-            } else {
+            } else if (deleteMode) {
+                res  = await contract.methods.deletePassword(formData.resource, formData.password).send({ from: accounts[0]});
+                console.log("Password deleted: ", res);
+            }else {
                 res = await contract.methods
                     .addPassword(formData.password, formData.resource)
                     .send({ from: accounts[0] });
@@ -71,7 +76,7 @@ const Modal: React.FC<ModalProps> = ({
             setFormData({ resource: "", username: "", password: "" });
             onClose();
         } catch (error) {
-            console.error(`Error ${editMode ? 'updating' : 'saving'} password:`, error);
+            console.error(`Error ${editMode ? 'updating' : 'saving' : 'deleting'} password:`, error);
         }
     };
 
@@ -82,7 +87,7 @@ const Modal: React.FC<ModalProps> = ({
                 <div className="relative rounded-3xl shadow-xl bg-white">
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
                         <h3 className="text-xl font-semibold text-black">
-                            {editMode ? 'Edit Password' : 'Save Password'}
+                            {editMode ? 'Edit Password' : 'Save Password' : 'Delete Password'}
                         </h3>
                         <button type="button" 
                                 className="end-2.5 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -140,7 +145,7 @@ const Modal: React.FC<ModalProps> = ({
                                             className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
                                             onClick={handleSubmit}
                                         >
-                                            {editMode ? 'Update' : 'Save'}
+                                            {editMode ? 'Update' : 'Save' : 'Delete'}
                                         </button>
                                         <button 
                                             type="button" 

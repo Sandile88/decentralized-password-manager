@@ -14,6 +14,8 @@ const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [savedPasswords, setSavedPasswords] = useState<PasswordData[]>([]);
     const [editingPassword, setEditingPassword] = useState<PasswordData | null>(null);
+    const [deletingPassword, setDeletePassword] = useState<PasswordData | null>(null);
+
     const { accounts, contract } = useWallet();
 
     const openModal = () => {
@@ -23,6 +25,11 @@ const Home = () => {
 
     const openEditModal = (password: PasswordData) => {
         setEditingPassword(password);
+        setIsModalOpen(true);
+    };
+
+    const deleteModal = (password: PasswordData) => {
+        setDeletePassword(password);
         setIsModalOpen(true);
     };
 
@@ -37,6 +44,14 @@ const Home = () => {
             setSavedPasswords(savedPasswords.map(pwd => 
                 pwd.resource === passwordData.resource ? passwordData : pwd
             ));
+
+        
+        } else if (deletingPassword){
+            setSavedPasswords(savedPasswords.map(pwd => 
+                pwd.resource === passwordData.resource ? passwordData : pwd
+            ));
+
+
         } else {
             // Add new password
             setSavedPasswords([...savedPasswords, passwordData]);
@@ -76,6 +91,14 @@ const Home = () => {
                                 >
                                     Edit
                                 </button>
+
+                                <button 
+                                    type="button" 
+                                    className="absolute bottom-4 right-4 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+                                    onClick={() => openEditModal(pwd)}
+                                >
+                                Delete
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -90,6 +113,7 @@ const Home = () => {
                 onPasswordSaved={handlePasswordSaved}
                 editMode={!!editingPassword}
                 initialData={editingPassword}
+                deleteModal={!!deletingPassword}
             />
         </div>
     );
