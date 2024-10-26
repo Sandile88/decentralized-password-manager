@@ -7,8 +7,8 @@ interface ModalProps {
     onClose: () => void;
     onPasswordSaved: (passwordData: PasswordData) => void;
     editMode?: boolean;
-    initialData?: PasswordData | null;
     deleteMode?: boolean;
+    initialData?: PasswordData | null;
 }
 
 interface PasswordData {
@@ -22,8 +22,8 @@ const Modal: React.FC<ModalProps> = ({
     onClose, 
     onPasswordSaved, 
     editMode = false,
-    initialData = null,
-    deleteMode = false
+    deleteMode = false,
+    initialData = null
 }) => {
     const { accounts, contract } = useWallet();
     const [formData, setFormData] = useState<PasswordData>({
@@ -33,12 +33,12 @@ const Modal: React.FC<ModalProps> = ({
     });
 
     useEffect(() => {
-        if (editMode && initialData) {
+        if ((editMode || deleteMode) && initialData) {
             setFormData(initialData);
         } else {
             setFormData({ resource: "", username: "", password: "" });
         }
-    }, [editMode, initialData]);
+    }, [editMode, deleteMode, initialData]);
 
     if (!isOpen) return null;
 
@@ -63,7 +63,9 @@ const Modal: React.FC<ModalProps> = ({
                     .send({ from: accounts[0] });
                 console.log("Password updated: ", res);
             } else if (deleteMode) {
-                res  = await contract.methods.deletePassword(formData.resource, formData.password).send({ from: accounts[0]});
+                res  = await contract.methods
+                .deletePassword(formData.resource)
+                .send({ from: accounts[0]});
                 console.log("Password deleted: ", res);
             }else {
                 res = await contract.methods
@@ -76,7 +78,7 @@ const Modal: React.FC<ModalProps> = ({
             setFormData({ resource: "", username: "", password: "" });
             onClose();
         } catch (error) {
-            console.error(`Error ${editMode ? 'updating' : 'saving' : 'deleting'} password:`, error);
+            console.error(`Error ${deleteMode ? 'deleting' : editMode ? 'updating' : 'saving'} password:`, error);
         }
     };
 
@@ -87,7 +89,7 @@ const Modal: React.FC<ModalProps> = ({
                 <div className="relative rounded-3xl shadow-xl bg-white">
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
                         <h3 className="text-xl font-semibold text-black">
-                            {editMode ? 'Edit Password' : 'Save Password' : 'Delete Password'}
+                            {deleteMode ? 'Delete Password' : editMode ? 'Edit Password' : 'Save Password'}
                         </h3>
                         <button type="button" 
                                 className="end-2.5 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -110,7 +112,7 @@ const Modal: React.FC<ModalProps> = ({
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="example.com" 
                                     required 
-                                    readOnly={editMode}
+                                    readOnly={editMode || deleteMode}
                                 />
                             </div>
                             <div>
@@ -122,7 +124,9 @@ const Modal: React.FC<ModalProps> = ({
                                     onChange={handleInputChange}
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="username" 
-                                    required 
+                                    required
+                                    // readOnly={deleteMode}
+
                                 />
                             </div>
                             <div>
@@ -135,6 +139,8 @@ const Modal: React.FC<ModalProps> = ({
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="••••••••" 
                                     required 
+                                    // readOnly={deleteMode}
+
                                 />
                             </div>
                             <div className="flex justify-between">
@@ -142,10 +148,10 @@ const Modal: React.FC<ModalProps> = ({
                                     <div className="flex items-center">
                                         <button 
                                             type="button" 
-                                            className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                            className={`text-white ${deleteMode ? 'bg-red-700 hover:bg-red-800' :  'bg-blue-700 hover:bg-blue-800' } focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2`}
                                             onClick={handleSubmit}
                                         >
-                                            {editMode ? 'Update' : 'Save' : 'Delete'}
+                                            {deleteMode ? 'Delete' : editMode ? 'Update' : 'Save'}
                                         </button>
                                         <button 
                                             type="button" 
