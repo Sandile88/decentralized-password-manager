@@ -1,11 +1,13 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useWallet } from "./Wallet";
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onPasswordSaved: (passwordData: PasswordData) => void;
+    editMode?: boolean;
+    initialData?: PasswordData | null;
 }
 
 interface PasswordData {
@@ -14,13 +16,27 @@ interface PasswordData {
     password: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onPasswordSaved }) => {
-    const { connect, accounts, web3, contract } = useWallet();
+const Modal: React.FC<ModalProps> = ({ 
+    isOpen, 
+    onClose, 
+    onPasswordSaved, 
+    editMode = false,
+    initialData = null 
+}) => {
+    const { accounts, contract } = useWallet();
     const [formData, setFormData] = useState<PasswordData>({
         resource: "",
         username: "",
         password: ""
     });
+
+    useEffect(() => {
+        if (editMode && initialData) {
+            setFormData(initialData);
+        } else {
+            setFormData({ resource: "", username: "", password: "" });
+        }
+    }, [editMode, initialData]);
 
     if (!isOpen) return null;
 
@@ -31,42 +47,42 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onPasswordSaved }) => {
         });
     };
 
-    const handleAddPassword = async () => {
+    const handleSubmit = async () => {
         if (!contract || !accounts[0]) {
             console.error("Contract or account not available.");
             return;
         }
 
         try {
-            const res = await contract.methods
-                .addPassword(formData.password, formData.resource)
-                .send({ from: accounts[0] });
+            let res;
+            if (editMode) {
+                res = await contract.methods
+                    .updatePassword(formData.resource, formData.password)
+                    .send({ from: accounts[0] });
+                console.log("Password updated: ", res);
+            } else {
+                res = await contract.methods
+                    .addPassword(formData.password, formData.resource)
+                    .send({ from: accounts[0] });
+                console.log("Password saved: ", res);
+            }
             
-            console.log("Password saved: ", res);
-            
-            // passing the saved password data to the parent component
-            onPasswordSaved({
-                resource: formData.resource,
-                username: formData.username,
-                password: formData.password
-            });
-
-            // clearing form and closing modal
+            onPasswordSaved(formData);
             setFormData({ resource: "", username: "", password: "" });
             onClose();
         } catch (error) {
-            console.error("Error saving password:", error);
+            console.error(`Error ${editMode ? 'updating' : 'saving'} password:`, error);
         }
     };
 
     return (
-        <div id="add-passwords" tabIndex={-1} aria-hidden={!isOpen} 
+        <div id="password-modal" tabIndex={-1} aria-hidden={!isOpen} 
              className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div className="relative p-4 w-full max-w-md max-h-full">
                 <div className="relative rounded-3xl shadow-xl bg-white">
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
                         <h3 className="text-xl font-semibold text-black">
-                            Save Password
+                            {editMode ? 'Edit Password' : 'Save Password'}
                         </h3>
                         <button type="button" 
                                 className="end-2.5 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -89,6 +105,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onPasswordSaved }) => {
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="example.com" 
                                     required 
+                                    readOnly={editMode}
                                 />
                             </div>
                             <div>
@@ -121,9 +138,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onPasswordSaved }) => {
                                         <button 
                                             type="button" 
                                             className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
-                                            onClick={handleAddPassword}
+                                            onClick={handleSubmit}
                                         >
-                                            Save
+                                            {editMode ? 'Update' : 'Save'}
                                         </button>
                                         <button 
                                             type="button" 

@@ -2,6 +2,7 @@
 import { IoIosAdd } from "react-icons/io";
 import Modal from "../../components/Modal";
 import { useState } from "react";
+import { useWallet } from "@/components/Wallet";
 
 interface PasswordData {
     resource: string;
@@ -12,17 +13,34 @@ interface PasswordData {
 const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [savedPasswords, setSavedPasswords] = useState<PasswordData[]>([]);
+    const [editingPassword, setEditingPassword] = useState<PasswordData | null>(null);
+    const { accounts, contract } = useWallet();
 
     const openModal = () => {
+        setEditingPassword(null);
+        setIsModalOpen(true);
+    };
+
+    const openEditModal = (password: PasswordData) => {
+        setEditingPassword(password);
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setEditingPassword(null);
     };
 
     const handlePasswordSaved = (passwordData: PasswordData) => {
-        setSavedPasswords([...savedPasswords, passwordData]);
+        if (editingPassword) {
+            // Update existing password
+            setSavedPasswords(savedPasswords.map(pwd => 
+                pwd.resource === passwordData.resource ? passwordData : pwd
+            ));
+        } else {
+            // Add new password
+            setSavedPasswords([...savedPasswords, passwordData]);
+        }
     };
 
     return (
@@ -47,10 +65,17 @@ const Home = () => {
                     <h2 className="text-2xl font-semibold mb-4">Saved Passwords</h2>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {savedPasswords.map((pwd, index) => (
-                            <div key={index} className="block max-w-sm p-6 rounded-xl shadow bg-gray-200">
+                            <div key={index} className="relative block max-w-sm p-6 rounded-xl shadow bg-gray-200">
                                 <h3 className="text-lg font-semibold text-blue-600">{pwd.resource}</h3>
                                 <p className="text-gray-600">Username: {pwd.username}</p>
-                                <p className="text-gray-600">Password: •••••••••</p>
+                                <p className="text-gray-600">Password: {pwd.password}</p>
+                                <button 
+                                    type="button" 
+                                    className="absolute bottom-4 right-4 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+                                    onClick={() => openEditModal(pwd)}
+                                >
+                                    Edit
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -59,12 +84,12 @@ const Home = () => {
                 <p className="text-lg">Your wallet is connected. Start saving passwords!</p>
             )}
 
-            
-
             <Modal 
                 isOpen={isModalOpen} 
                 onClose={closeModal} 
                 onPasswordSaved={handlePasswordSaved}
+                editMode={!!editingPassword}
+                initialData={editingPassword}
             />
         </div>
     );
