@@ -50,14 +50,12 @@ const Home = () => {
         }
 
         try {
-            // Call the smart contract's deletePassword function
             const res = await contract.methods
                 .deletePassword(resource)
                 .send({ from: accounts[0] });
             
             console.log("Password deleted: ", res);
             
-            // Remove the password from the UI
             setSavedPasswords(savedPasswords.filter(pwd => pwd.resource !== resource));
         } catch (error) {
             console.error("Error deleting password:", error);
@@ -66,7 +64,7 @@ const Home = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen pt-24">
-            <form className="max-w-md mx-auto mb-8 ml-4 lg:mx-auto lg:ml-80">
+            <form className="max-w-md mb-auto mr-auto lg:mx-auto lg:ml-80">
                 <div className="relative">
                     <button 
                         type="button" 
@@ -79,7 +77,6 @@ const Home = () => {
                 </div>
             </form>
 
-            <h1 className="text-4xl font-bold mb-6">Welcome to VaultLock</h1>
             
             {savedPasswords.length > 0 ? (
                 <div className="w-full max-w-4xl p-6">
@@ -111,7 +108,13 @@ const Home = () => {
                     </div>
                 </div>
             ) : (
-                <p className="text-lg">Your wallet is connected. Start saving passwords!</p>
+                
+                <div className="flex items-center justify-center min-h-screen -mt-16">
+                    <div className="text-center">
+                        <h1 className="text-4xl font-bold">Welcome to VaultLock</h1>
+                        <p className="text-lg">Your wallet is connected. Start saving passwords!</p>      
+                    </div>
+                </div>
             )}
 
             <Modal 
