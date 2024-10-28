@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useWallet } from "./Wallet";
+// import { useAlerts } from '@/context/page';
 
 interface ModalProps {
     isOpen: boolean;
@@ -26,6 +27,7 @@ const Modal: React.FC<ModalProps> = ({
     initialData = null
 }) => {
     const { accounts, contract } = useWallet();
+    // const { showAlert } = useAlerts();
     const [formData, setFormData] = useState<PasswordData>({
         resource: "",
         username: "",
@@ -49,42 +51,73 @@ const Modal: React.FC<ModalProps> = ({
         });
     };
 
+    const validateForm = () => {
+        if (!formData.resource.trim()) {
+            // showAlert("Please enter a website name/URL", "error");
+            return false;
+        }
+        if (!formData.username.trim()) {
+            // showAlert("Please enter a username", "error");
+            return false;
+        }
+        if (!formData.password.trim()) {
+            // showAlert("Please enter a password", "error");
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async () => {
         if (!contract || !accounts[0]) {
-            console.error("Contract or account not available.");
+            // showAlert("Wallet not connected. Please connect your wallet.", "error");
             return;
         }
-
+    
+        if (!validateForm()) {
+            return;
+        }
+    
         try {
-            let res;
             if (editMode) {
-                res = await contract.methods
+                await contract.methods
                     .updatePassword(formData.resource, formData.password)
                     .send({ from: accounts[0] });
-                console.log("Password updated: ", res);
+                // showAlert(`Password for ${formData.resource} updated successfully!`, "success");
             } else if (deleteMode) {
-                res  = await contract.methods
-                .deletePassword(formData.resource)
-                .send({ from: accounts[0]});
-                console.log("Password deleted: ", res);
-            }else {
-                res = await contract.methods
+                await contract.methods
+                    .deletePassword(formData.resource)
+                    .send({ from: accounts[0] });
+                // showAlert(`Password for ${formData.resource} deleted successfully!`, "success");
+            } else {
+                await contract.methods
                     .addPassword(formData.password, formData.resource)
                     .send({ from: accounts[0] });
-                console.log("Password saved: ", res);
+                // showAlert(`Password for ${formData.resource} saved successfully!`, "success");
             }
             
             onPasswordSaved(formData);
             setFormData({ resource: "", username: "", password: "" });
             onClose();
-        } catch (error) {
+        } catch (error: any) {
             console.error(`Error ${deleteMode ? 'deleting' : editMode ? 'updating' : 'saving'} password:`, error);
+            
+            let errorMessage = "An unexpected error occurred. Please try again.";
+            
+            if (error.code === 4001) {
+                errorMessage = "Transaction rejected by user.";
+            } else if (error.message?.includes("user rejected")) {
+                errorMessage = "Transaction cancelled by user.";
+            } else if (error.message?.includes("insufficient funds")) {
+                errorMessage = "Insufficient funds for transaction.";
+            }
+            
+            // showAlert(errorMessage, "error");
         }
     };
-
+    
     return (
         <div id="password-modal" tabIndex={-1} aria-hidden={!isOpen} 
-             className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+             className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm bg-black/30">
             <div className="relative p-4 w-full max-w-md max-h-full">
                 <div className="relative rounded-3xl shadow-xl bg-white">
                     <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
@@ -125,8 +158,6 @@ const Modal: React.FC<ModalProps> = ({
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="username" 
                                     required
-                                    // readOnly={deleteMode}
-
                                 />
                             </div>
                             <div>
@@ -139,8 +170,6 @@ const Modal: React.FC<ModalProps> = ({
                                     className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                                     placeholder="••••••••" 
                                     required 
-                                    // readOnly={deleteMode}
-
                                 />
                             </div>
                             <div className="flex justify-between">

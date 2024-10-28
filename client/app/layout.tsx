@@ -3,6 +3,7 @@ import { Lato } from "next/font/google";
 import Navbar from "../components/Nav";
 import "./globals.css";
 import { WalletProvider } from "@/components/Wallet";
+// import { AlertsProvider } from "@/context/page";
 
 const lato = Lato({ subsets: ["latin"], weight: ["400"]});
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={lato.className}>
         <WalletProvider>
         <Navbar/>  {/* present on every page */}
+        {/* <AlertsProvider> */}
         {children}
+        {/* </AlertsProvider> */}
         </WalletProvider>
         </body>
     </html>

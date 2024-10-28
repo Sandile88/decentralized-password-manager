@@ -3,6 +3,7 @@ import { IoIosAdd } from "react-icons/io";
 import Modal from "../../components/Modal";
 import { useState } from "react";
 import { useWallet } from "@/components/Wallet";
+// import { useAlerts } from '@/context/page';
 
 interface PasswordData {
     resource: string;
@@ -15,6 +16,7 @@ const Home = () => {
     const [savedPasswords, setSavedPasswords] = useState<PasswordData[]>([]);
     const [editingPassword, setEditingPassword] = useState<PasswordData | null>(null);
     const { accounts, contract } = useWallet();
+    // const { showAlert } = useAlerts();
 
     const openModal = () => {
         setEditingPassword(null);
@@ -36,29 +38,41 @@ const Home = () => {
             setSavedPasswords(savedPasswords.map(pwd => 
                 pwd.resource === passwordData.resource ? passwordData : pwd
             ));
+            // showAlert(`Password for ${passwordData.resource} updated successfully!`, "success");
         } else {
             setSavedPasswords([...savedPasswords, passwordData]);
+            // showAlert(`Password for ${passwordData.resource} saved successfully!`, "success");
         }
     };
+    
 
     const handleDeletePassword = async (resource: string) => {
         if (!contract || !accounts[0]) {
-            console.error("Contract or account not available.");
+            // showAlert("Contract or account not available.", "error");
             return;
         }
 
         try {
-            const res = await contract.methods
+            await contract.methods
                 .deletePassword(resource)
                 .send({ from: accounts[0] });
             
-            console.log("Password deleted: ", res);
-            
             setSavedPasswords(savedPasswords.filter(pwd => pwd.resource !== resource));
-        } catch (error) {
+            // showAlert(`Password for ${resource} deleted successfully!`, "success");
+        } catch (error: any) {
             console.error("Error deleting password:", error);
+            let errorMessage = "An unexpected error occurred while deleting the password.";
+            
+            if (error.code === 4001) {
+                errorMessage = "Delete operation rejected by user.";
+            } else if (error.message?.includes("user rejected")) {
+                errorMessage = "Delete operation cancelled by user.";
+            }
+            
+            // showAlert(errorMessage, "error");
         }
     };
+
 
     return (
         <div className="flex flex-col min-h-screen pt-24 px-4 lg:px-80">
