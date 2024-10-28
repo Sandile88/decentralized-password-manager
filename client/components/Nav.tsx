@@ -92,9 +92,7 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      
-        {/* )} */}
-        
+              
         <div 
           className={`${
             isClick ? "block" : "hidden"
@@ -111,9 +109,6 @@ const Navbar = () => {
             <li>
                 <ScrollLink to="how-to" smooth={true} duration={500} className="block py-2 px-3 text-white rounded hover:text-blue-100 md:hover:bg-transparent md:hover:text-blue-100 md:p-0">How To</ScrollLink>
             </li>
-            {/* <li>
-                <Link className="block py-2 px-3 text-white rounded hover:text-sky-100 md:hover:bg-transparent md:hover:text-sky-100 md:p-0">Contact</Link>
-            </li> */}
             </ul>
         </div>
         </div>

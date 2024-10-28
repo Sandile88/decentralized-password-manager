@@ -24,11 +24,9 @@ const CTA = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center mt-8 space-y-4 md:space-y-0 md:space-x-4 md:flex-row lg:mt-10">
-            {/* <a href="#" title="" className="inline-flex items-center justify-center px-4 py-4" role="button"> */}
             <button type="button" 
             onClick={connectWallet}
             className="  text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get started</button>
-            {/* </a> */}
         </div>
 
         <p className="mt-6 text-base text-center text-gray-600">Get started in just 2 minutes!</p>

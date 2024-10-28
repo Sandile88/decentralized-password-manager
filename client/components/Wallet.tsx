@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, useState, useContext } from 'react';
 import Web3 from 'web3';
-import abi from '../../server/contract/vault.json'; // Import the JSON file of manager contract
+import abi from '../../server/contract/vault.json'; 
 import { useRouter } from 'next/navigation';
 
 interface WalletContextType {
