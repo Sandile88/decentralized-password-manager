@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useWallet } from "./Wallet";
+import { FaEye } from "react-icons/fa";
+
 // import { useAlerts } from '@/context/page';
 
 interface ModalProps {
@@ -34,6 +36,9 @@ const Modal: React.FC<ModalProps> = ({
         password: ""
     });
 
+    const [showPassword, setShowPassword] = useState(false);
+
+
     useEffect(() => {
         if ((editMode || deleteMode) && initialData) {
             setFormData(initialData);
@@ -51,21 +56,21 @@ const Modal: React.FC<ModalProps> = ({
         });
     };
 
-    const validateForm = () => {
-        if (!formData.resource.trim()) {
-            // showAlert("Please enter a website name/URL", "error");
-            return false;
-        }
-        if (!formData.username.trim()) {
-            // showAlert("Please enter a username", "error");
-            return false;
-        }
-        if (!formData.password.trim()) {
-            // showAlert("Please enter a password", "error");
-            return false;
-        }
-        return true;
-    };
+    // const validateForm = () => {
+    //     if (!formData.resource.trim()) {
+    //         // showAlert("Please enter a website name/URL", "error");
+    //         return false;
+    //     }
+    //     if (!formData.username.trim()) {
+    //         // showAlert("Please enter a username", "error");
+    //         return false;
+    //     }
+    //     if (!formData.password.trim()) {
+    //         // showAlert("Please enter a password", "error");
+    //         return false;
+    //     }
+    //     return true;
+    // };
 
     const handleSubmit = async () => {
         if (!contract || !accounts[0]) {
@@ -73,9 +78,9 @@ const Modal: React.FC<ModalProps> = ({
             return;
         }
     
-        if (!validateForm()) {
-            return;
-        }
+        // if (!validateForm()) {
+        //     return;
+        // }
     
         try {
             if (editMode) {
@@ -162,15 +167,13 @@ const Modal: React.FC<ModalProps> = ({
                             </div>
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-600">Password</label>
-                                <input 
-                                    type="password" 
-                                    name="password" 
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    className="bg-gray-200 border border-gray-300 text-black text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                                    placeholder="••••••••" 
-                                    required 
-                                />
+                                <div className="relative">
+
+                                <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} className="bg-gray-200 border text-sm rounded-full block w-full p-2.5" placeholder="••••••••" required />
+                                    <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-blue-600" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? "Hide" : "Show"}
+                                    </button>
+                                </div>
                             </div>
                             <div className="flex justify-between">
                                 <div className="flex mb-4 items-start">
