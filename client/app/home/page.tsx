@@ -33,12 +33,10 @@ const Home = () => {
 
     const handlePasswordSaved = (passwordData: PasswordData) => {
         if (editingPassword) {
-            // Update existing password
             setSavedPasswords(savedPasswords.map(pwd => 
                 pwd.resource === passwordData.resource ? passwordData : pwd
             ));
         } else {
-            // Add new password
             setSavedPasswords([...savedPasswords, passwordData]);
         }
     };
@@ -63,27 +61,24 @@ const Home = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen pt-24">
-            <form className="max-w-md mb-auto mr-auto lg:mx-auto lg:ml-80">
-                <div className="relative">
-                    <button 
-                        type="button" 
-                        className="flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-10 py-2.5 text-center me-2 mb-2"
-                        onClick={openModal}
-                    >
-                        <IoIosAdd className="w-5 h-5 mr-2" />
-                        Save Password
-                    </button>
-                </div>
-            </form>
+        <div className="flex flex-col min-h-screen pt-24 px-4 lg:px-80">
+            <div className="w-full">
+                <button 
+                    type="button" 
+                    className="flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-10 py-2.5 text-center mb-6"
+                    onClick={openModal}
+                >
+                    <IoIosAdd className="w-5 h-5 mr-2" />
+                    Save Password
+                </button>
+            </div>
 
-            
             {savedPasswords.length > 0 ? (
-                <div className="w-full max-w-4xl p-6">
+                <div className="w-full">
                     <h2 className="text-2xl font-semibold mb-4">Saved Passwords</h2>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {savedPasswords.map((pwd, index) => (
-                            <div key={index} className="relative block max-w-sm p-6 rounded-xl shadow bg-gray-200">
+                            <div key={index} className="relative block p-6 rounded-xl shadow bg-gray-200">
                                 <h3 className="text-lg font-semibold text-blue-600 mb-4">{pwd.resource}</h3>
                                 <p className="text-gray-600">Username: {pwd.username}</p>
                                 <p className="text-gray-600 mb-8">Password: {pwd.password}</p>
@@ -108,11 +103,11 @@ const Home = () => {
                     </div>
                 </div>
             ) : (
-                
-                <div className="flex items-center justify-center min-h-screen -mt-16">
+                <div className="flex items-center justify-center flex-1">
                     <div className="text-center">
-                        <h1 className="text-4xl font-bold">Welcome to VaultLock</h1>
-                        <p className="text-lg">Your wallet is connected. Start saving passwords!</p>      
+                        <p className="text-lg text-gray-500">
+                            No passwords saved yet. Click "Save Password" to get started!
+                        </p>      
                     </div>
                 </div>
             )}
