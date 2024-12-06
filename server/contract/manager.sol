@@ -11,7 +11,6 @@ contract Manager{
 
     // passwords are stored in a mapping with the hashed resource as the key.
     mapping(address => mapping(bytes32 => StorePassword)) private storeAllPasswords;
-    // mapping(address => StorePassword[]) private StoreAllPasswords;
 
     event PasswordAction(string message);
 
@@ -29,10 +28,6 @@ contract Manager{
    
     function setMasterPassword(string calldata _masterPassword) external onlyOwner{
         masterPassword = keccak256(abi.encodePacked(_masterPassword));
-
-         // add password and then encrypt on the frontend with crpyto-rsa
-        // so add your code to encrypt from your frontend this side
-        //use web3 js to retrive public and private keys
     }
 
 
@@ -84,9 +79,4 @@ contract Manager{
 
         return storeAllPasswords[msg.sender][resourceHash].password;
     }
-       
-
-    // function getAllPasswords() external view onlyOwner returns  (StorePassword[] memory){
-    //     return StoreAllPasswords[msg.sender];
-    // }
 }

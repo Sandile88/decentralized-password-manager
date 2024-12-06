@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useWallet } from "./Wallet";
-import { FaEye } from "react-icons/fa";
 
 // import { useAlerts } from '@/context/page';
 
